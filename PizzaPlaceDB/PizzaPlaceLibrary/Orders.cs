@@ -12,9 +12,10 @@ namespace PizzaPlaceLibrary
 
         public int OrderId { get; set; }
         public int? UsersId { get; set; }
-        public byte[] OrderTime { get; set; }
         public int? LocationId { get; set; }
-        public double? OrderTotal { get; set; }
+        public DateTime? OrderTime { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? OrderTotal { get; set; }
 
         public Locations Location { get; set; }
         public Users Users { get; set; }

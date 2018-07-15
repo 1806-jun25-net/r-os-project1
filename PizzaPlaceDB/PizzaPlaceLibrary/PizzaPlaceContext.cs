@@ -15,12 +15,12 @@ namespace PizzaPlaceLibrary
         {
         }
 
-        public virtual DbSet<HasTopping> HasTopping { get; set; }
         public virtual DbSet<Inventory> Inventory { get; set; }
         public virtual DbSet<Locations> Locations { get; set; }
         public virtual DbSet<OrderPizza> OrderPizza { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Pizzas> Pizzas { get; set; }
+        public virtual DbSet<PizzaTopping> PizzaTopping { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,29 +34,6 @@ namespace PizzaPlaceLibrary
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<HasTopping>(entity =>
-            {
-                entity.ToTable("has_topping", "Pizzeria");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.ItemId).HasColumnName("item_id");
-
-                entity.Property(e => e.PizzaId).HasColumnName("pizza_id");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.HasTopping)
-                    .HasForeignKey(d => d.ItemId)
-                    .HasConstraintName("FK_item_id_topping");
-
-                entity.HasOne(d => d.Pizza)
-                    .WithMany(p => p.HasTopping)
-                    .HasForeignKey(d => d.PizzaId)
-                    .HasConstraintName("FK_pizza_id_topping");
-            });
-
             modelBuilder.Entity<Inventory>(entity =>
             {
                 entity.HasKey(e => e.ItemId);
@@ -132,11 +109,16 @@ namespace PizzaPlaceLibrary
                 entity.Property(e => e.LocationId).HasColumnName("location_id");
 
                 entity.Property(e => e.OrderTime)
-                    .IsRequired()
                     .HasColumnName("order_time")
-                    .IsRowVersion();
+                    .HasColumnType("datetime");
 
-                entity.Property(e => e.OrderTotal).HasColumnName("order_total");
+                entity.Property(e => e.OrderTotal)
+                    .HasColumnName("order_total")
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.Price)
+                    .HasColumnName("price")
+                    .HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.UsersId).HasColumnName("users_id");
 
@@ -159,10 +141,7 @@ namespace PizzaPlaceLibrary
 
                 entity.Property(e => e.PizzaId).HasColumnName("pizza_id");
 
-                entity.Property(e => e.Crust)
-                    .HasColumnName("crust")
-                    .HasMaxLength(60)
-                    .IsUnicode(false);
+                entity.Property(e => e.Crust).HasColumnName("crust");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -170,12 +149,37 @@ namespace PizzaPlaceLibrary
                     .HasMaxLength(128)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Price)
+                    .HasColumnName("price")
+                    .HasColumnType("decimal(18, 0)");
+
                 entity.Property(e => e.Size)
                     .HasColumnName("size")
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Type).HasColumnName("type");
+            });
+
+            modelBuilder.Entity<PizzaTopping>(entity =>
+            {
+                entity.ToTable("pizzaTopping", "Pizzeria");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ItemId).HasColumnName("item_id");
+
+                entity.Property(e => e.PizzaId).HasColumnName("pizza_id");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.PizzaTopping)
+                    .HasForeignKey(d => d.ItemId)
+                    .HasConstraintName("FK__pizzaTopp__item___7D439ABD");
+
+                entity.HasOne(d => d.Pizza)
+                    .WithMany(p => p.PizzaTopping)
+                    .HasForeignKey(d => d.PizzaId)
+                    .HasConstraintName("FK__pizzaTopp__pizza__7C4F7684");
             });
 
             modelBuilder.Entity<Users>(entity =>
@@ -198,10 +202,10 @@ namespace PizzaPlaceLibrary
 
                 entity.Property(e => e.LocationId).HasColumnName("location_id");
 
-                entity.HasOne(d => d.Location)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.LocationId)
-                    .HasConstraintName("FK_location_id_users");
+                entity.Property(e => e.Phone)
+                    .HasColumnName("phone")
+                    .HasMaxLength(60)
+                    .IsUnicode(false);
             });
         }
     }

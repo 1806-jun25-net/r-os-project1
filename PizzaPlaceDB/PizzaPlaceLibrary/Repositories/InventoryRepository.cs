@@ -16,6 +16,241 @@ namespace PizzaPlaceLibrary
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
 
+                     }
+
+        public bool  CheckInventory(List<string> myToppings, List<Pizza> pizza, int location, bool hasDough, bool hasSauce, List<string> noTopping)
+        {
+            var repoLocation = new LocationRepository(new PizzaPlaceContext());
+            string locationName = repoLocation.GetLocationById(location);
+            string sauce = " ";
+            bool check = true;
+            string size = " ";
+            foreach (var s in pizza)
+            {
+                //set sauce string 
+
+                if (s.Sauce == "1")
+                {
+                    sauce = "BBQ Sauce";
+                }
+                else if (s.Sauce == "2")
+                {
+                    sauce = " Marinara Sauce";
+                }
+                else
+                {
+                    sauce = "Alfredo Sauce ";
+                }
+
+
+                size = s.Size;//size of pizza
+
+
+                // checking availability quantity, how many of topping, sauce  and dough unit needs to be taken out per size
+                int takeout = 0;
+
+                if (size == "S")
+                {
+                    takeout = 1;
+
+                }
+                else if (size == "M")
+                {
+                    takeout = 2;
+                }
+                else if (size == "L")
+                {
+                    takeout = 3;
+                }
+               
+
+                var items = _db.Inventory.FirstOrDefault(g => g.LocationId == location);
+
+                //has dough?
+                if (items.LocationId == location)
+                {
+                    var d = _db.Inventory.FirstOrDefault(g => g.Name == "dough" && g.LocationId == location);
+                    
+                   if ( d.Quantity < takeout )
+                    {
+                        hasDough = false;
+                        Console.WriteLine(locationName + " Doesn't have any more dough");
+                    }
+                }
+                //has souce?
+                if (items.LocationId == location)
+                {
+                    var d = _db.Inventory.FirstOrDefault(g => g.Name == sauce && g.LocationId == location);
+                    if (d.Quantity < takeout)
+                    {
+                        hasSauce = false;
+                        Console.WriteLine(locationName + " Doesn't have any more of the " + sauce);
+                    }
+
+                }
+
+                foreach (var topping in myToppings)
+                {
+
+
+                    if (topping == "Cheese" && items.LocationId == location)
+                    {
+                        var id = _db.Inventory.FirstOrDefault(g => g.Name == "Cheese" && g.LocationId == location);
+
+
+                        if (id.Quantity < takeout)
+                        {
+                            noTopping.Add("Cheese");
+                            
+                        }
+
+
+                    }
+                    else if (topping == "Pepperoni" && items.LocationId == location)
+                    {
+                        var id = _db.Inventory.FirstOrDefault(g => g.Name == "Pepperoni" && g.LocationId == location);
+
+
+                        if (id.Quantity < takeout)
+                        {
+                            noTopping.Add("Pepperoni");
+                        }
+                    }
+                    else if (topping == "Sausage" && items.LocationId == location)
+                    {
+                        var id = _db.Inventory.FirstOrDefault(g => g.Name == "Sausage" && g.LocationId == location);
+
+
+                        if (id.Quantity < takeout)
+                        {
+                            noTopping.Add("Sausage");
+
+                        }
+                    }
+
+
+
+
+                }
+
+               
+            }
+
+            if (noTopping.Count() > 0)
+            {
+                Console.WriteLine("Sorry " + locationName + " doesn't have in it's inventory: \n ");
+                foreach (var topping in noTopping )
+                {
+                    Console.WriteLine(topping +  " \n");
+                }
+
+                check = false;
+            }
+
+            return check;
+        }
+        public void MinusToppings(List<string> myToppings, List<Pizza> pizza, int location)
+        {
+            string sauce;
+            string size =" ";
+            foreach (var s in pizza)
+            {
+
+
+                if (s.Sauce == "1")
+                {
+                    sauce = "BBQ Sauce";
+                }
+                else if (s.Sauce == "2")
+                {
+                    sauce = " Marinara Sauce";
+                }
+                else
+                {
+                    sauce = "Alfredo Sauce ";
+                }
+
+
+                size = s.Size;//size of pizza
+
+
+                // how many of topping and dough unit to take out depending on size of pizza
+                int minus = 0;
+
+                if (size == "S")
+                {
+                    minus = 1;
+                    
+                }
+                else if (size == "M")
+                {
+                    minus = 2;
+                }
+                else if (size == "L")
+                {
+                    minus = 3;
+                }
+
+
+                var items = _db.Inventory.FirstOrDefault(g => g.LocationId == location);
+                //take out dough
+                if(items.LocationId == location)
+                {
+                    var d = _db.Inventory.FirstOrDefault(g => g.Name == "dough" && g.LocationId == location);
+
+                    d.Quantity = d.Quantity - minus;
+                }
+                //take out sauce 
+                if (items.LocationId == location)
+                {
+                    var d = _db.Inventory.FirstOrDefault(g => g.Name == sauce && g.LocationId == location);
+                    if (d.Quantity < minus)
+                    {
+                        d.Quantity = d.Quantity - minus;
+                    }
+
+                }
+
+
+
+                foreach (var topping in myToppings) 
+                {
+
+
+                    if (topping == "Cheese" && items.LocationId == location)
+                    {
+                        var id = _db.Inventory.FirstOrDefault(g => g.Name == "Cheese" && g.LocationId == location);
+
+                        id.Quantity = id.Quantity - minus;
+                        
+
+                    }
+                    else if (topping == "Pepperoni" && items.LocationId == location)
+                    {
+                        var id = _db.Inventory.FirstOrDefault(g => g.Name == "Pepperoni" && g.LocationId == location);
+
+                        id.Quantity = id.Quantity - minus;
+                    }
+                    else if (topping == "Sausage" && items.LocationId == location)
+                    {
+                        var id = _db.Inventory.FirstOrDefault(g => g.Name == "Sausage" && g.LocationId == location);
+
+                        id.Quantity = id.Quantity - minus;
+                    }
+
+
+
+
+                }
+            }
+
+
+            SaveChanges();
+
+
+
+
+
 
         }
 
@@ -42,6 +277,7 @@ namespace PizzaPlaceLibrary
             };
             _db.Add(inventory);
         }
+
         public void EditInventory(Inventory inventory)
         {
             // would add it if it didn't exist

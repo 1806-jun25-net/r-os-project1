@@ -24,6 +24,15 @@ namespace PizzaPlaceLibrary
             List<Locations> Locations = _db.Locations.AsNoTracking().ToList();
             return Locations;
         }
+
+        public string GetLocationById(int id)
+        {
+            var location = _db.Locations.FirstOrDefault(g => g.LocationId == id);
+            string name;
+            name = location.Name.ToString();
+            return name;
+
+        }
         public void SaveChanges()
         {
             _db.SaveChanges();

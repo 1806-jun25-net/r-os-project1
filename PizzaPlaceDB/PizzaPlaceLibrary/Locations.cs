@@ -9,7 +9,6 @@ namespace PizzaPlaceLibrary
         {
             Inventory = new HashSet<Inventory>();
             Orders = new HashSet<Orders>();
-            Users = new HashSet<Users>();
         }
 
         public int LocationId { get; set; }
@@ -17,6 +16,5 @@ namespace PizzaPlaceLibrary
 
         public ICollection<Inventory> Inventory { get; set; }
         public ICollection<Orders> Orders { get; set; }
-        public ICollection<Users> Users { get; set; }
     }
 }

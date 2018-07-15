@@ -26,7 +26,7 @@ namespace PizzaPlaceLibrary
             return orderPizza;
         }
 
-        public void AddOrderPizza(int order_id, int pizza_id, int quantity)
+        public void AddOrderPizza(int? order_id, int? pizza_id)
         {
             // LINQ: First fails by throwing exception,
             // FirstOrDefault fails to just null
@@ -36,9 +36,41 @@ namespace PizzaPlaceLibrary
             {
                 OrderId = order_id,
                 PizzaId = pizza_id,
-                Quantity = quantity
+               
             };
             _db.Add(OrderPizza);
+        }
+        public int? GetPizzaIdBySize(string pizza, string size)
+        {
+
+            var repo = _db.Pizzas.FirstOrDefault(g => g.Name == pizza);
+            if (pizza == null)
+            {
+                return 0;
+            }
+            else
+            {
+               
+                return repo.PizzaId;
+            }
+
+
+        }
+        public int? GetOrderByUserId(int? findUserId)
+        {
+
+            var order = _db.Orders.FirstOrDefault(g => g.UsersId == findUserId);
+            if (order == null)
+            {
+                return 0;
+            }
+
+            else
+            {
+                return order.OrderId;
+            }
+
+
         }
 
 

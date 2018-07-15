@@ -7,7 +7,7 @@ namespace PizzaPlaceLibrary
     {
         public Inventory()
         {
-            HasTopping = new HashSet<HasTopping>();
+            PizzaTopping = new HashSet<PizzaTopping>();
         }
 
         public int ItemId { get; set; }
@@ -17,6 +17,6 @@ namespace PizzaPlaceLibrary
         public int? LocationId { get; set; }
 
         public Locations Location { get; set; }
-        public ICollection<HasTopping> HasTopping { get; set; }
+        public ICollection<PizzaTopping> PizzaTopping { get; set; }
     }
 }

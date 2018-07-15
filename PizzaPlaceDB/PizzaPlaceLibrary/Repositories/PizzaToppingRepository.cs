@@ -6,32 +6,32 @@ using System.Text;
 
 namespace PizzaPlaceLibrary.Repositories
 {
-    class HasToppingRepository
+    class PizzaToppingRepository
     {
 
 
         private readonly PizzaPlaceContext _db;
 
-        public HasToppingRepository(PizzaPlaceContext db)
+        public PizzaToppingRepository(PizzaPlaceContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
 
 
         }
 
-        public IEnumerable<HasTopping> GetHasToppings()
+        public IEnumerable<PizzaTopping> GetPizzaTopping()
         {
             
-            List<HasTopping> hasTopping = _db.HasTopping.AsNoTracking().ToList();
-            return hasTopping;
+            List<PizzaTopping> pizzaToping = _db.PizzaTopping.AsNoTracking().ToList();
+            return pizzaToping;
         }
 
-        public void AddToHasTopping( int pizza_id, int item_id)
+        public void AddPizzaTopping( int? pizza_id, int item_id)
         {
            
 
 
-            var hasTopping = new HasTopping
+            var hasTopping = new PizzaTopping
             {
                 PizzaId = pizza_id,
                 ItemId = item_id
@@ -39,7 +39,7 @@ namespace PizzaPlaceLibrary.Repositories
             };
             _db.Add(hasTopping);
         }
-        public void EditHasTopping(HasTopping hasTopping)
+        public void EditPizzaTopping(PizzaTopping hasTopping)
         {
             
             _db.Update(hasTopping);

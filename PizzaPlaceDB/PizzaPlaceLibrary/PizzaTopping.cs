@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PizzaPlaceLibrary
 {
-    public partial class HasTopping
+    public partial class PizzaTopping
     {
         public int Id { get; set; }
         public int? PizzaId { get; set; }

@@ -26,19 +26,37 @@ namespace PizzaPlaceLibrary
             return users;
         }
 
-        public void AddUsers(string name, string lastName, int location)
+        public void AddUsers(string name, string lastName, string phone)
         {
             // LINQ: First fails by throwing exception,
             // FirstOrDefault fails to just null
-           
-        
+
+
             var User = new Users
             {
                 FirstName = name,
                 LastName = lastName,
-                LocationId = location
+                Phone = phone,
+                LocationId = 1
             };
             _db.Add(User);
+        }
+
+        public int GetUserIDByPhone(string findUser, string phone)
+        {
+
+            var user = _db.Users.FirstOrDefault(g => g.FirstName == findUser && g.Phone == phone);
+            if (user == null)
+            {
+                return 0;
+            }
+
+            else
+            {
+                return user.UsersId;
+            }
+
+
         }
 
 

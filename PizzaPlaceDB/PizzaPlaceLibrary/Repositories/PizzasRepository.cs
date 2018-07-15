@@ -18,7 +18,7 @@ namespace PizzaPlaceLibrary
 
         }
 
-        public IEnumerable<Pizzas> GetUsers()
+        public IEnumerable<Pizzas> GetPizzas()
         {
             // we don't need to track changes to these, so
             // skip the overhead of doing so
@@ -26,7 +26,7 @@ namespace PizzaPlaceLibrary
             return pizzas;
         }
 
-        public void AddPizzas(string name, bool type, string size)
+        public void AddPizzas( string size, decimal price, string name, int crust)
         {
             // LINQ: First fails by throwing exception,
             // FirstOrDefault fails to just null
@@ -35,8 +35,9 @@ namespace PizzaPlaceLibrary
             var Pizza = new Pizzas
             {
                 Name = name,
-                Type = type,
-                Size = size
+                Price = price,
+                Size = size,
+                Crust = crust
             };
             _db.Add(Pizza);
         }
@@ -51,6 +52,7 @@ namespace PizzaPlaceLibrary
             //var trackedMovie = _db.Movie.Find(movie.Id);
             //_db.Entry(trackedMovie).CurrentValues.SetValues(movie);
         }
+
 
         public void SaveChanges()
         {

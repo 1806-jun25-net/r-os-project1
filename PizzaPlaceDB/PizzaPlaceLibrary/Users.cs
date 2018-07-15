@@ -14,8 +14,8 @@ namespace PizzaPlaceLibrary
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? LocationId { get; set; }
+        public string Phone { get; set; }
 
-        public Locations Location { get; set; }
         public ICollection<Orders> Orders { get; set; }
     }
 }
