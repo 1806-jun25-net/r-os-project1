@@ -1,11 +1,38 @@
-﻿@model PizzaPLace.DataAccess.Users
+﻿@model PizzaPlace.WebApp.Models.UserModel
 
 @{
     ViewData["Title"] = "Welcome";
 }
 
+<style>
+
+    button {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+        display: inline;
+        zoom: 1;
+        vertical-align: middle;
+        margin-left: 20px;
+        background-color: #4CAF50;
+    }
+
+    h4 {
+        display: inline-block;
+        display: inline;
+        zoom: 1; 
+        float: left;
+        padding-top: 5px;
+        text-align: left;
+        width: 350px;
+    }
+</style>
+
+
+
+
 <h2>Welcome to Pizza Place</h2>
-<h3>Please enter your information</h3>
+<h3>Please enter your information below</h3>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,9 +41,9 @@
             <input type="hidden" asp-for="UsersId" />
 
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
@@ -30,7 +57,7 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Continue" class="btn btn-default" />
             </div>
         </form>
     </div>

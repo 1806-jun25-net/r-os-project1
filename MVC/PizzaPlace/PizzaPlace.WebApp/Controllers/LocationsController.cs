@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PizzaPlace.WebApp.Models;
 using PizzaPLace.DataAccess;
 
 namespace PizzaPlace.WebApp.Controllers
@@ -21,7 +23,32 @@ namespace PizzaPlace.WebApp.Controllers
         // GET: Locations
         public async Task<IActionResult> Index()
         {
+
             return View(await _context.Locations.ToListAsync());
+        }
+        //GET: Locations/ChooseLocation
+        public IActionResult ChooseLocation(Users user)
+        {
+            LocationModel location = new LocationModel();
+
+            return View(location);
+
+        }
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult ChooseLocation(LocationModel location,Users user, IFormCollection loc)
+        {
+            var selected = location.LocationId;
+            // var selected = loc["LocationId"];
+            location.LocationId = int.Parse(loc["SelectedLocation"]);
+
+            user.LocationId = location.LocationId;
+
+            TempData["msg"] = "user id" + user.UsersId;
+
+            return RedirectToAction("PlaceOrder","Orders", user);
+
+
         }
 
         // GET: Locations/Details/5

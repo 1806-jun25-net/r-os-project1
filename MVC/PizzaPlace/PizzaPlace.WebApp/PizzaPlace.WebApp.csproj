@@ -21,4 +21,10 @@
     <ProjectReference Include="..\PizzaPlace.UnitTest\PizzaPlace.UnitTest.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Orders\Invoice.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

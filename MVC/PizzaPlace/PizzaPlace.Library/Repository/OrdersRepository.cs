@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PizzaPLace.DataAccess;
 using PizzaPlaceLibrary;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace PizzaPlace.Library
@@ -17,7 +19,11 @@ namespace PizzaPlace.Library
             _db = db ?? throw new ArgumentNullException(nameof(db));
 
 
+          
+
         }
+
+
 
         public IEnumerable<Orders> GetOrderPizza()
         {
@@ -62,7 +68,7 @@ namespace PizzaPlace.Library
         }
 
 
-        public void AddOrder(int user_id, int location_id, decimal orderTotal)
+        public void AddOrder(int user_id, int? location_id, decimal orderTotal)
         {
 
             var date_time = DateTime.Now;
@@ -158,6 +164,7 @@ namespace PizzaPlace.Library
             List<Pizzas> pizza = _db.Pizzas.ToList();
             return pizza;
         }
+       
 
         public IEnumerable<Locations> GetLocation()
         {
@@ -221,7 +228,7 @@ namespace PizzaPlace.Library
         public int? GetPizzaIdBySize(string pizza, string size)
         {
 
-            var repo = _db.Pizzas.FirstOrDefault(g => g.Name == pizza);
+            var repo = _db.Pizzas.LastOrDefault(g => g.Name == pizza);
             if (pizza == null)
             {
                 return 0;
@@ -271,8 +278,28 @@ namespace PizzaPlace.Library
             return Locations;
         }
 
-        public string GetLocationById(int id)
+
+        public void AddPizzas(string size, decimal? price, string name, int? crust)
         {
+            // LINQ: First fails by throwing exception,
+            // FirstOrDefault fails to just null
+
+
+            var Pizza = new Pizzas
+            {
+                Name = name,
+                Price = price,
+                Size = size,
+                Crust = crust
+            };
+            _db.Add(Pizza);
+        }
+
+
+        public string GetLocationById(int? id)
+        {
+
+
             var location = _db.Locations.FirstOrDefault(g => g.LocationId == id);
             string name;
             name = location.Name.ToString();
@@ -285,32 +312,43 @@ namespace PizzaPlace.Library
 
 
         //save changes
-        public bool CheckInventory(List<string> myToppings, List<Pizza> pizza, int location, bool hasDough, bool hasSauce, List<string> noTopping)
+        public bool CheckInventory(List<string> myToppings, Pizzas pizza, string salsa, int? location)
         {
-            var repoLocation = new OrdersRepository(new PizzaPlaceContext());
+            ////////////////////////////////////////////////////////////////////////////////////////
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            IConfigurationRoot configuration = builder.Build();
+            Console.WriteLine(configuration.GetConnectionString("PizzaPlace"));
+            var optionsBuilder = new DbContextOptionsBuilder<PizzaPlaceContext>();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("PizzaPlace"));
+            ////////////////////////////////////////////////////////////////////////////////////////
+
+            var noTopping = new List<string>();
+            var repoLocation = new OrdersRepository(new PizzaPlaceContext((optionsBuilder.Options)));
             string locationName = repoLocation.GetLocationById(location);
-            string sauce = " ";
+            string sauce = salsa;
             bool check = true;
             string size = " ";
-            foreach (var s in pizza)
-            {
-                //set sauce string 
 
-                if (s.Sauce == "1")
-                {
-                    sauce = "BBQ Sauce";
-                }
-                else if (s.Sauce == "2")
-                {
-                    sauce = " Marinara Sauce";
-                }
-                else
-                {
-                    sauce = "Alfredo Sauce ";
-                }
+            //set sauce string 
 
+            //if (s.Sauce == "1")
+            //{
+            //    sauce = "BBQ Sauce";
+            //}
+            //else if (s.Sauce == "2")
+            //{
+            //    sauce = " Marinara Sauce";
+            //}
+            //else
+            //{
+            //    sauce = "Alfredo Sauce ";
+            //}
 
-                size = s.Size;//size of pizza
+            
+
+                size = pizza.Size;//size of pizza
 
 
                 // checking availability quantity, how many of topping, sauce  and dough unit needs to be taken out per size
@@ -340,7 +378,6 @@ namespace PizzaPlace.Library
 
                     if (d.Quantity < takeout)
                     {
-                        hasDough = false;
                         Console.WriteLine(locationName + " Doesn't have any more dough");
                     }
                 }
@@ -350,7 +387,6 @@ namespace PizzaPlace.Library
                     var d = _db.Inventory.FirstOrDefault(g => g.Name == sauce && g.LocationId == location);
                     if (d.Quantity < takeout)
                     {
-                        hasSauce = false;
                         Console.WriteLine(locationName + " Doesn't have any more of the " + sauce);
                     }
 
@@ -401,7 +437,7 @@ namespace PizzaPlace.Library
                 }
 
 
-            }
+            
 
             if (noTopping.Count() > 0)
             {
@@ -416,31 +452,12 @@ namespace PizzaPlace.Library
 
             return check;
         }
-        public void MinusToppings(List<string> myToppings, List<Pizza> pizza, int location)
+        public void MinusToppings(List<string> myToppings, Pizzas pizza, string salsa, int? location)
         {
-            string sauce;
-            string size = " ";
-            foreach (var s in pizza)
-            {
 
-
-                if (s.Sauce == "1")
-                {
-                    sauce = "BBQ Sauce";
-                }
-                else if (s.Sauce == "2")
-                {
-                    sauce = " Marinara Sauce";
-                }
-                else
-                {
-                    sauce = "Alfredo Sauce ";
-                }
-
-
-                size = s.Size;//size of pizza
-
-
+            string sauce = salsa;
+            string size = pizza.Size;
+   
                 // how many of topping and dough unit to take out depending on size of pizza
                 int minus = 0;
 
@@ -509,7 +526,7 @@ namespace PizzaPlace.Library
 
 
                 }
-            }
+            
 
 
             SaveChanges();
@@ -549,6 +566,59 @@ namespace PizzaPlace.Library
             //var trackedMovie = _db.Movie.Find(movie.Id);
             //_db.Entry(trackedMovie).CurrentValues.SetValues(movie);
         }
+
+        //users
+
+        public IEnumerable<Users> GetUsers()
+        {
+            // we don't need to track changes to these, so
+            // skip the overhead of doing so
+            List<Users> users = _db.Users.AsNoTracking().ToList();
+            return users;
+        }
+
+        public void AddUsers(string name, string lastName, string phone)
+        {
+            
+
+
+            var User = new Users             {
+                FirstName = name,
+                LastName = lastName,
+                Phone = phone,
+                LocationId = 1
+            };
+
+            _db.Add(User);
+        }
+
+        public int? GetUserIDByPhone(string findUser, string phone)
+        {
+
+            var user = _db.Users.FirstOrDefault(g => g.FirstName == findUser && g.Phone == phone);
+            if (user == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return user.UsersId;
+            }
+
+
+        }
+
+
+        public void EditUser(Users User)
+        {
+            // would add it if it didn't exist
+            _db.Update(User);
+
+            // sometimes we need to do it a different way
+            //var trackedMovie = _db.Movie.Find(movie.Id);
+            //_db.Entry(trackedMovie).CurrentValues.SetValues(movie);
+        }
+
 
 
 

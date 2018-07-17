@@ -14,6 +14,7 @@ namespace PizzaPlace.WebApp
     {
         public static void Main(string[] args)
         {
+
             CreateWebHostBuilder(args).Build().Run();
         }
 

@@ -1,0 +1,59 @@
+﻿@model PizzaPlace.WebApp.Models.LocationModel
+
+@{
+    ViewData["Title"] = "ChooseLocation";
+}
+
+<style>
+
+    button {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+        display: inline;
+        / for IE7*/ zoom: 1; /* for IE7*/
+        vertical-align: middle;
+        margin-left: 20px
+    }
+
+    h4 {
+        display: inline-block;
+        display: inline;
+        / for IE7*/ zoom: 1; /* for IE7*/
+        float: left;
+        padding-top: 5px;
+        text-align: left;
+        width: 350px;
+    }
+</style>
+<h2>ChooseLocation</h2>
+
+<h4>Locations</h4>
+<h5>@TempData["msg"] </h5>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChooseLocation" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LocationId" />
+            <div class="form-group">
+                @Html.DropDownListFor(x=>x.SelectedLocation, new List<SelectListItem>
+                {
+                      new SelectListItem() {Text = "Herndon Pizza Place", Value="1"},
+                      new SelectListItem() {Text = "Reston Pizza Place", Value="2"},
+
+                }, "Select Location")
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Continue" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

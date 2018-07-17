@@ -36,8 +36,9 @@ namespace PizzaPlace.WebApp
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddScoped<OrdersRepository>();
+        
             services.AddDbContext<PizzaPlaceContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PizzaPlace")));
+            services.AddScoped<OrdersRepository>();
         }
     
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

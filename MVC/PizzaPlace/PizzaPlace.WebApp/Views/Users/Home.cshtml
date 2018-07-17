@@ -1,0 +1,102 @@
+﻿@model IEnumerable<PizzaPLace.DataAccess.Users>
+@{
+    ViewData["Title"] = "Home";
+}
+
+
+<style>
+
+    button {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+        display: inline;
+        zoom: 1;
+        vertical-align: middle;
+        margin-left: 20px ;
+        background-color: green;
+    }
+
+    h4 {
+        display: inline-block;
+        display: inline;
+        zoom: 1;
+        float: left;
+        padding-top: 5px;
+        text-align: left;
+        width: 350px;
+    }
+
+
+</style>
+
+
+<h1 align="center">Choose an Option</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="display: flex">
+                <div class="form-group">
+                    <h4>Display all pizzas</h4>
+                    <button type="submit" class="btn btn-default "><a asp-area="" asp-controller="Pizzas" asp-action="Index">See Pizzas</a></button>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <h4> Display all Orders</h4>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default "><a asp-area="" asp-controller="Orders" asp-action="Index">See Orders</a></button>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <div class="form-group">
+                    <h4> Search users by name</h4>
+                    <button type="submit" class="btn btn-default "><a href="SearchUser">Search User</a></button>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <h4>Display all order history of a single location</h4>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default "><a href="#">Show History</a></button>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <h4>Display all order history of a user</h4>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default "><a href="SearchUser"> Order History  </a></button>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <h4> Display All Users</h4>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default "><a href="index">See Users</a></button>
+                </div>
+            </th>
+        </tr>
+       
+
+        <tr>
+            @*<th>
+                <h4> User - Order - Pizzas</h4>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default "><a asp-area="" asp-controller="PizzaOrder" asp-action="Index">Go</a></button>
+                </div>
+            </th*@>
+        </tr>
+        @*<th>
+            @Html.DisplayNameFor(model => model.DefaultLocationFkNavigation)
+        </th>*@
+       
+       
+    </thead>
+</table>
