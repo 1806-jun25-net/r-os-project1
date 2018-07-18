@@ -12,6 +12,8 @@ namespace PizzaPlace.WebApp.Models
         public int? OrderId { get; set; }
         public int? PizzaId { get; set; }
         public int? Quantity { get; set; }
+        
+
 
     }
 }

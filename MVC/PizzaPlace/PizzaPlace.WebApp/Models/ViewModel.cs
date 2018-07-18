@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PizzaPLace.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,10 +10,10 @@ namespace PizzaPlace.WebApp.Models
 {
     public class ViewModel
     {
-        public IEnumerable<PizzaModel> Pizzas { get; set; }
-        public IEnumerable<OrderModel> Orders { get; set; }
-        public IEnumerable<UserModel> Users { get; set; }
-        public IEnumerable<OrderPizzaModel> OrderPizzas { get; set; }
+        public IEnumerable<Pizzas> Pizzas { get; set; }
+        public IEnumerable<Orders> Orders { get; set; }
+        public IEnumerable<Users> Users { get; set; }
+        public IEnumerable<OrderPizza> OrderPizzas { get; set; }
 
         public int Count { get; set; } = 1;
 
@@ -20,17 +21,15 @@ namespace PizzaPlace.WebApp.Models
         public SelectListItem SelectedSauce { get; set; }
 
         [Required]
-
         public SelectListItem SelectedPizza { get; set; }
 
         [Required]
-
         public SelectListItem SelectedCrust { get; set; }
 
         [Required]
         public SelectListItem SelectedSize { get; set; }
 
-       
+       public int UseridTD { get; set; }
 
 
 

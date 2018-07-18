@@ -82,6 +82,7 @@ namespace PizzaPlace.WebApp.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+           
             if (id == null)
             {
                 return NotFound();
@@ -98,7 +99,7 @@ namespace PizzaPlace.WebApp.Controllers
         public IActionResult Register()
         {
 
-            
+            //create user model object 
             UserModel user = new UserModel();
             return View(user);
         }
@@ -109,8 +110,13 @@ namespace PizzaPlace.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public  IActionResult Register(UserModel user)
         {
+            Users myUser;
             bool isUser = false;
-            
+            TempData["firstname"] = user.Name;
+            TempData["lastname"] = user.LastName;
+            TempData["phone"] = user.Phone;
+            TempData["Count"] = 1;// counter for numbers pizza increments in the ordersController
+            TempData["order_total"] = 0;
 
             var allUsers = Repo.GetUsers();
 
@@ -119,6 +125,7 @@ namespace PizzaPlace.WebApp.Controllers
                 if (oneUser.FirstName == user.Name && oneUser.Phone == user.Phone)
                 {
                     user.UsersId = oneUser.UsersId;
+                    TempData["userid"] = user.UsersId;
                     isUser = true;             
                     goto newUser;
                 }
@@ -128,30 +135,34 @@ namespace PizzaPlace.WebApp.Controllers
             newUser:
             if(isUser == true)
             {
-                var myUser = new Users
-                {
-                    UsersId = user.UsersId,
-                    FirstName = user.Name,
-                    LastName = user.LastName,
-                    Phone = user.Phone,
-                   
-                };
+                TempData["welcomemsg"] = "Welcome Back " + user.Name;
                 
             }
             else if (isUser == false)
             {
-
+                TempData["welcomemsg"] = "Welcome " + user.Name;
 
                 //create new user
                 Repo.AddUsers(user.Name, user.LastName, user.Phone);
                 Repo.SaveChanges();
-                
-               
-                
-            }
-            TempData["msg"] = "user id " + user.UsersId;
 
-            return RedirectToAction("ChooseLocation","Locations", user);
+                //get id of new user here 
+                user.UsersId = Repo.GetUserIDByPhone(user.Name, user.Phone);
+                TempData["userid"] = user.UsersId;
+            }
+
+            myUser = new Users
+            {
+                UsersId = user.UsersId,
+                FirstName = user.Name,
+                LastName = user.LastName,
+                Phone = user.Phone,
+
+            };
+
+           // TempData["msg"] = " msg: user id " + user.UsersId;
+
+            return RedirectToAction("ChooseLocation","Locations", myUser);
            // return View(user);
 
         }

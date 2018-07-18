@@ -23,7 +23,12 @@ namespace PizzaPlace.Library
 
         }
 
+        public IEnumerable<OrderPizza> GetOrderPizzas()
+        {
 
+            List<OrderPizza> orders = _db.OrderPizza.AsNoTracking().ToList();
+            return orders;
+        }
 
         public IEnumerable<Orders> GetOrderPizza()
         {
@@ -52,6 +57,53 @@ namespace PizzaPlace.Library
             var OrderLocations = _db.Orders.Where(g => g.LocationId == location_id).OrderByDescending(g => g.OrderTotal);
             return OrderLocations;
         }
+
+        public void UpdateTotal(decimal order_total, int orderid)
+        {
+
+            var orderTotal = _db.Orders.FirstOrDefault(g => g.OrderId == orderid);
+            orderTotal.OrderTotal = order_total;
+
+
+           
+            
+           // var trackedMovie = _db.Movie.Find(movie.Id);
+            //_db.Entry(trackedMovie).CurrentValues.SetValues(movie);
+
+            SaveChanges();
+        }
+
+        public List<Pizzas> GetPizzasofOrder(int orderid)
+        {
+            var orderpizza = _db.OrderPizza.Where(q => q.OrderId == orderid);
+            var allPizzas = GetPizza();
+            var pizzaIDList = new List<int?>();
+
+            var myPizzas = new List<Pizzas>();
+            
+            foreach (var Pizza in orderpizza)
+            {
+                pizzaIDList.Add(Pizza.PizzaId);
+
+            }
+
+            foreach ( var id in pizzaIDList)
+            {
+                foreach (var pizza in allPizzas)
+                {
+                    if (pizza.PizzaId == id)
+                    {
+                        myPizzas.Add(pizza);
+                    }
+                }
+            }
+            
+            
+
+            return myPizzas;
+            
+        }
+
         //latest order in location
         public IEnumerable<Orders> GetLocationOrderLatest(int location_id)
         {
@@ -81,6 +133,7 @@ namespace PizzaPlace.Library
                 OrderTime = date_time
             };
             _db.Add(order);
+            SaveChanges();
         }
 
 
@@ -224,6 +277,7 @@ namespace PizzaPlace.Library
 
             };
             _db.Add(OrderPizza);
+            SaveChanges();
         }
         public int? GetPizzaIdBySize(string pizza, string size)
         {
@@ -244,7 +298,7 @@ namespace PizzaPlace.Library
         public int? GetOrderByUserId(int? findUserId)
         {
 
-            var order = _db.Orders.FirstOrDefault(g => g.UsersId == findUserId);
+            var order = _db.Orders.LastOrDefault(g => g.UsersId == findUserId);
             if (order == null)
             {
                 return 0;
@@ -592,7 +646,7 @@ namespace PizzaPlace.Library
             _db.Add(User);
         }
 
-        public int? GetUserIDByPhone(string findUser, string phone)
+        public int GetUserIDByPhone(string findUser, string phone)
         {
 
             var user = _db.Users.FirstOrDefault(g => g.FirstName == findUser && g.Phone == phone);

@@ -41,10 +41,12 @@ namespace PizzaPlace.WebApp.Controllers
             var selected = location.LocationId;
             // var selected = loc["LocationId"];
             location.LocationId = int.Parse(loc["SelectedLocation"]);
-
+            TempData["locationid"] = location.LocationId; 
             user.LocationId = location.LocationId;
 
-            TempData["msg"] = "user id" + user.UsersId;
+            //TempData["msg"] = "user id " + user.UsersId + "name " + user.FirstName;
+           // TempData["name"] = "user name " + user.FirstName + "last name " + user.FirstName;
+
 
             return RedirectToAction("PlaceOrder","Orders", user);
 

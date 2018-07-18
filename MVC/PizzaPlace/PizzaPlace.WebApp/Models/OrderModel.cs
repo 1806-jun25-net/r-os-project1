@@ -17,7 +17,9 @@ namespace PizzaPlace.WebApp.Models
 
         public decimal? Price { get; set; }
 
-        public decimal? OrderTotal { get; set; }
+        public decimal OrderTotal { get; set; }
+
+      
 
     }
 }

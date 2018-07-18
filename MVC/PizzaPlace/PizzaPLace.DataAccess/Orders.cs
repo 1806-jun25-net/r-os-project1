@@ -15,7 +15,7 @@ namespace PizzaPLace.DataAccess
         public int? LocationId { get; set; }
         public DateTime? OrderTime { get; set; }
         public decimal? Price { get; set; }
-        public decimal? OrderTotal { get; set; }
+        public decimal OrderTotal { get; set; }
 
         public Locations Location { get; set; }
         public Users Users { get; set; }
