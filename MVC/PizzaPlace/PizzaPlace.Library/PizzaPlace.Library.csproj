@@ -17,4 +17,8 @@
     <ProjectReference Include="..\PizzaPLace.DataAccess\PizzaPLace.DataAccess.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
 </Project>

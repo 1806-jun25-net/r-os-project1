@@ -12,5 +12,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.0" />
   </ItemGroup>
+  
+  <PropertyGroup>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
 
+  
 </Project>
